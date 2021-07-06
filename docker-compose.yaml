@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  nginx:
+    image: nginx
+    container_name: kallery_nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./backend:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - backend
+
+  frontend:
+    container_name: kallery_frontend
+    build:
+      context: ./frontend
+      target: "develop"
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./frontend:/app"
+    command: /bin/sh -c "cp -r /cache/node_modules/. /app/node_modules && yarn dev"
+    #command: /bin/sh -c "yarn install && yarn dev"
+    #command: /bin/sh -c "yarn dev"
+
+  backend:
+    container_name: kallery_backend
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: kallery_php
+    volumes:
+      - ./backend:/var/www
+    environment:
+      TZ: Asia/Tokyo
+    ports:
+      - "8000:8000"
+    # command: php artisan serve --host=0.0.0.0 --port=8000
+
+  db:
+    image: mariadb:10.6
+    container_name: kallery_db
+    volumes:
+      - ./db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: kallery
+      MYSQL_USER: root
+      MYSQL_PASSWORD: docker
+      MYSQL_ROOT_PASSWORD: docker
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
