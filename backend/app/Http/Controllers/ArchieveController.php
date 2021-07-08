@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Archieve;
+use App\Models\Tag;
+use App\Models\ArchieveTag;
 use Image;
 
 class ArchieveController extends Controller
@@ -84,7 +86,6 @@ class ArchieveController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        //$archieve = Archieve::where('id', $request->id)->first();
         $archieve = Archieve::getArchieveById($request->id);
         if (!$archieve) {
             return response()->json("File not exists.", 404);
@@ -100,7 +101,7 @@ class ArchieveController extends Controller
     }
 
     /**
-     * Add new post
+     * Add new tag
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -108,11 +109,21 @@ class ArchieveController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id' => 'required|integer|min:1',
-            'original' => 'boolean'
+            'name' => 'string|min:2|max:12'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+
+        $archieve = Archieve::getArchieveById($request->id);
+        if (!$archieve) {
+            return response()->json("File not exists.", 404);
+        }
+
+        $tag_id = Tag::getTagId($request->name);
+        $archieve_tag = ArchieveTag::createArchieveTag($archieve->id, $tag_id, auth()->user()->id);
+
+        return response()->json($archieve_tag);
     }
 }

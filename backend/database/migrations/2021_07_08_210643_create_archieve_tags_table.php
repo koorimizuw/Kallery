@@ -15,12 +15,15 @@ class CreateArchieveTagsTable extends Migration
     {
         Schema::create('archieve_tags', function (Blueprint $table) {
             $table->id();
-            // user
-            $table->unsignedBigInteger('uid');
-            $table->foreign('uid')->references('id')->on('users');
+            // archieve id
+            $table->unsignedBigInteger('archieve_id');
+            $table->foreign('archieve_id')->references('id')->on('archieves');
             // tag id
             $table->unsignedBigInteger('tag_id');
             $table->foreign('tag_id')->references('id')->on('tags');
+            // user
+            $table->unsignedBigInteger('uid');
+            $table->foreign('uid')->references('id')->on('users');
             $table->timestamps();
         });
     }
