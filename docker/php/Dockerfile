@@ -9,7 +9,10 @@ RUN apt-get update \
   git \
   zip \
   unzip \
-  vim
+  vim \
+  libmagickwand-dev --no-install-recommends \
+  && pecl install imagick \
+  && docker-php-ext-enable imagick
 
 RUN apt-get update \
   && apt-get install -y libpq-dev \
