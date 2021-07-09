@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArchieveController;
+use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,8 +40,11 @@ Route::group([
     'prefix' => 'v1'
 
 ], function ($router) {
+    // file
     Route::post('/add', [ArchieveController::class, 'add']);
     Route::get('/file', [ArchieveController::class, 'file']);
-    Route::post('/add_tag', [ArchieveController::class, 'addTag']);
-    Route::post('/delete_tag', [ArchieveController::class, 'deleteTag']);
+    // tag
+    Route::get('/tag', [TagController::class, 'getTag']);
+    Route::post('/add_tag', [TagController::class, 'addTag']);
+    Route::post('/delete_tag', [TagController::class, 'deleteTag']);
 });
