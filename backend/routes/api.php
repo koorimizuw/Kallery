@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArchieveController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,9 @@ Route::group([
     Route::get('/file', [ArchieveController::class, 'file']);
     // tag
     Route::get('/tag', [TagController::class, 'getTag']);
-    Route::post('/add_tag', [TagController::class, 'addTag']);
-    Route::post('/delete_tag', [TagController::class, 'deleteTag']);
+    Route::post('/tag', [TagController::class, 'addTag']);
+    Route::delete('/tag', [TagController::class, 'deleteTag']);
+    // comment
+    Route::get('/comment', [CommentController::class, 'getComment']);
+    Route::post('/comment', [CommentController::class, 'addComment']);
 });
