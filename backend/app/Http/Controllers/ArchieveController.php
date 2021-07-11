@@ -18,7 +18,7 @@ class ArchieveController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['file']]);
+        $this->middleware('auth:api', ['except' => ['file', 'all']]);
     }
 
     /**
@@ -95,5 +95,16 @@ class ArchieveController extends Controller
         }
 
         return response()->download($path);
+    }
+
+    /**
+     * Get all file
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function all(Request $request)
+    {
+        $list = Archieve::select('id', 'title', 'description')->get();
+        return response()->json($list);
     }
 }

@@ -42,6 +42,7 @@ Route::group([
 
 ], function ($router) {
     // file
+    Route::get('/all', [ArchieveController::class, 'all']);
     Route::post('/add', [ArchieveController::class, 'add']);
     Route::get('/file', [ArchieveController::class, 'file']);
     // tag
