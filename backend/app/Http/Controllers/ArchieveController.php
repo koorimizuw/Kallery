@@ -18,7 +18,7 @@ class ArchieveController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['file', 'all']]);
+        $this->middleware('auth:api', ['except' => ['file', 'all', 'detail']]);
     }
 
     /**
@@ -104,7 +104,34 @@ class ArchieveController extends Controller
      */
     public function all(Request $request)
     {
-        $list = Archieve::select('id', 'title', 'description')->get();
+        $list = Archieve::select('id', 'title')->get();
         return response()->json($list);
+    }
+
+    /**
+     * Get detail
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function detail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $archieve = Archieve::getArchieveById($request->id);
+        if (!$archieve) {
+            return response()->json("File not exists.", 404);
+        }
+
+        return response()->json(array(
+            "id" => $archieve->id,
+            "title" => $archieve->title,
+            "description" => $archieve->description,
+        ));
     }
 }

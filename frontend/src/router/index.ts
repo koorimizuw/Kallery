@@ -17,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "Upload",
     component: () => import("@/pages/Upload.vue"),
   },
+  {
+    path: "/detail/:id",
+    name: "Detail",
+    component: () => import("@/pages/Detail.vue"),
+  },
 ];
 
 const router = createRouter({

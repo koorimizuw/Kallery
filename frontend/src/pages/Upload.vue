@@ -5,6 +5,7 @@
         <a-step title="画像アップロード" />
         <a-step title="コメントを書く" />
         <a-step title="確認" />
+        <a-step title="タグを追加する" />
       </a-steps>
     </div>
     <div v-if="current == 0">
@@ -40,12 +41,37 @@
         アップロード
       </a-button>
     </div>
+    <div v-if="current == 3">
+      <a-tag v-for="i in tags" :key="i.id">{{ i.name }}</a-tag>
+      <a-input
+        v-if="tag.inputVisible"
+        ref="inputRef"
+        type="text"
+        size="small"
+        :style="{ width: '78px' }"
+        v-model:value="tag.inputValue"
+        @blur="addTag"
+        @keyup.enter="addTag"
+      />
+      <a-tag
+        v-if="!tag.inputVisible"
+        @click="showInput"
+        style="background: #fff; border-style: dashed"
+      >
+        <plus-outlined />
+        New Tag
+      </a-tag>
+      <a-button class="btn" type="primary" size="large" @click="back">
+        終了
+      </a-button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, nextTick } from "vue";
 import axios from "axios";
+import router from "../router";
 import { message } from "ant-design-vue";
 
 const current = ref(0);
@@ -54,6 +80,7 @@ const form = reactive({
   title: "",
   desc: "",
 });
+const id = ref(0);
 
 const handleChange = () => {
   current.value += 1;
@@ -64,10 +91,50 @@ const upload = async () => {
   data.append("title", form.title);
   data.append("description", form.desc);
   data.append("file", fileList.value[0].originFileObj);
-  await axios.post("/api/v1/add", data).catch((e) => {
-    message.error("アップロードに失敗しました。");
+  await axios
+    .post("/api/v1/add", data)
+    .then((res) => {
+      message.info("アップロードしました。");
+      id.value = res.data.id;
+      current.value += 1;
+    })
+    .catch((e) => {
+      message.error("アップロードに失敗しました。");
+    });
+};
+
+const tags = ref([]);
+const inputRef = ref();
+const tag = reactive({
+  inputVisible: false,
+  inputValue: "",
+});
+const showInput = () => {
+  tag.inputVisible = true;
+  nextTick(() => {
+    inputRef.value.focus();
   });
-  message.info("アップロードしました。");
+};
+const addTag = async () => {
+  if (!tag.inputValue) {
+    tag.inputVisible = false;
+    tag.inputValue = "";
+    return;
+  }
+  const res = await axios.post("/api/v1/tag", {
+    id: id.value,
+    name: tag.inputValue,
+  });
+  tags.value.push({
+    id: 0,
+    name: tag.inputValue,
+  });
+  tag.inputVisible = false;
+  tag.inputValue = "";
+};
+
+const back = () => {
+  router.push("/");
 };
 </script>
 

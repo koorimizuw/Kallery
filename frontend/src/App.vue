@@ -1,12 +1,12 @@
 <template>
   <header class="appbar">
-    <h2 class="title" @click="router.push(`/`)">Kallery</h2>
+    <h2 class="title" @click="$router.push(`/`)">Kallery</h2>
     <div class="right">
       <div v-if="store.state.authenticated" class="user">
         ようこそ、{{ store.state.user }}
       </div>
       <div v-else style="display: inline-block">
-        <a-button size="large" @click="router.push(`/login`)">
+        <a-button size="large" @click="$router.push(`/login`)">
           ログイン
         </a-button>
       </div>
@@ -14,7 +14,7 @@
         class="btn"
         type="primary"
         size="large"
-        @click="router.push(`/upload`)"
+        @click="$router.push(`/upload`)"
       >
         アップロード
       </a-button>
@@ -25,7 +25,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import router from "./router";
 import { useStore } from "vuex";
 
 const store = useStore();

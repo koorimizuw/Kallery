@@ -6,6 +6,7 @@
     :key="i.id"
     :image="`http://localhost:8000/api/v1/file?id=${i.id}`"
     :title="i.title"
+    @click="$router.push(`/detail/${i.id}`)"
   ></Card>
 </template>
 
@@ -21,8 +22,6 @@ onBeforeMount(async () => {
   const res = await axios.get("/api/v1/all");
   list.value = res.data;
 });
-
-const url = "http://localhost:8000/api/v1/file?id=12";
 </script>
 
 <style lang="scss" scoped>

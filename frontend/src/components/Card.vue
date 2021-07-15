@@ -24,6 +24,7 @@ const props =
   max-width: 300px;
   &-image {
     max-height: 200px;
+    object-fit: cover;
   }
 }
 </style>
