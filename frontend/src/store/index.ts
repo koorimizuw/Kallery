@@ -52,13 +52,11 @@ export const store = createStore({
       }
     },
     async register(ctx, credentials) {
-      const res = await axios.post("/api/auth/register", {
+      await axios.post("/api/auth/register", {
         name: credentials.name,
         email: credentials.email,
         password: credentials.password,
         password_confirmation: credentials.password_confirmation,
-      }).catch(e => {
-        console.log("Register failed.")
       })
     },
     async refresh(ctx) {
